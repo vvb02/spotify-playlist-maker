@@ -1,0 +1,96 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212;
+  height: 100vh;
+  color: white;
+}
+
+@font-face {
+  font-family: "Circular Sp Ara Black Web";
+  src: url("../fonts/Lineto_FontPool_Delivery_231024110327/Lineto_FontPool_Delivery_231024110327/Circular Spotify Text Arabic - Web Fonts/css/fonts/Circular Sp Ara Web Black.woff")
+    format("woff");
+}
+@font-face {
+  font-family: "Circular Sp Ara Book Web";
+  src: url("../fonts/Lineto_FontPool_Delivery_231024110327/Lineto_FontPool_Delivery_231024110327/Circular Spotify Text Arabic - Web Fonts/css/fonts/Circular Sp Ara Web Book.woff2")
+    format("woff");
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.title,
+.description,
+label {
+  color: white;
+}
+
+.title {
+  font-family: "Circular Sp Ara Black Web", sans-serif;
+  color: #1db954;
+}
+
+.description {
+  font-family: "Circular Sp Ara Book Web", sans-serif;
+  font-size: 30px;
+}
+
+main {
+  width: 100%;
+  margin-top: 5em;
+}
+#input-section {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1.8em;
+  font-family: "Circular Sp Ara Book Web", sans-serif;
+}
+
+#year-input {
+  background-color: #242424;
+  border: 0;
+  border-radius: 500px;
+  color: white;
+  height: 48px;
+  padding: 6px 36px;
+  width: 160px;
+  text-align: center;
+  text-overflow: ellipsis;
+  font-family: "Circular Sp Ara Book Web", sans-serif;
+}
+
+input[type="number"] {
+  font-size: 24px;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+#submit-btn {
+  background: #1ed661;
+  color: black;
+  font-family: "Circular Sp Ara Book Web", sans-serif;
+  padding: 6px 36px;
+}

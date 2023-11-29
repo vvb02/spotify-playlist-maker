@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nostalgia Radio</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="title">Nostalgia Radio</h1>
+      <p class="description">Relive the music from any year!</p>
+    </header>
+    <main>
+      <section id="input-section">
+        <label for="year-input">Enter a year</label>
+        <input type="number" name="" id="year-input" />
+        <button id="submit-btn">Get Songs</button>
+      </section>
+
+      <section id="profile">
+        <h1>Display Spotify profile data</h1>
+
+        <h2>Logged in as <span id="display-name"></span></h2>
+        <span id="avatar"></span>
+        <ul>
+          <li>User ID: <span id="id"></span></li>
+          <li>Spotify URI: <a id="uri" href="#"></a></li>
+          <li>Link: <a id="url" href="#"></a></li>
+          <li>Profile Image: <span id="img-url"></span></li>
+        </ul>
+      </section>
+    </main>
+    <script src="js/main.js"></script>
+  </body>
+</html>

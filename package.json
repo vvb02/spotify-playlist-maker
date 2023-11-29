@@ -1,0 +1,26 @@
+{
+  "name": "spotify-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vvb02/nostalgia-radio.git"
+  },
+  "author": "bilaine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vvb02/nostalgia-radio/issues"
+  },
+  "homepage": "https://github.com/vvb02/nostalgia-radio#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0",
+    "spotify-web-api-node": "^5.0.2"
+  }
+}
