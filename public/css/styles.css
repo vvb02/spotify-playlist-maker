@@ -47,12 +47,17 @@ main {
   width: 100%;
   margin-top: 5em;
 }
-#input-section {
+#input-section,
+#login-section {
   display: flex;
   justify-content: center;
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+#input-section {
+  display: none;
 }
 
 label {
@@ -88,9 +93,16 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-#submit-btn {
-  background: #1ed661;
+#submit-btn,
+#login-btn {
+  background: white;
   color: black;
   font-family: "Circular Sp Ara Book Web", sans-serif;
   padding: 6px 36px;
+  font-weight: 700;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+  padding: 16px 40px;
+  font-size: 1.125rem;
 }

@@ -34,10 +34,19 @@ app.use(
   })
 );
 
+app.get("/auth/status", (req, res) => {
+  if (req.cookies.access_token) {
+    res.json({ isAuthenticated: true });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
+});
+
 app.get("/login", (req, res) => {
   // Redirect the user to Spotify's authorization page
   let state = generateRandomString(16);
   req.session.state = state;
+  console.log(state);
   res.redirect(
     `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&state=${state}`
   );
@@ -74,7 +83,7 @@ app.get("/callback", async (req, res) => {
       res.cookie("refresh_token", data.refresh_token, { httpOnly: true });
 
       // Redirect to another route to perform more actions (test)
-      res.redirect(`http://localhost:3000/getSongFromYear`);
+      res.redirect(`http://localhost:3000/index.html`);
     } else {
       res.send("Error obtaining access token");
     }
@@ -104,6 +113,11 @@ app.get("/getSongFromYear", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// Home page that say's login into Spotify
+// User goes through authentication
+// User types in year and hits 'create playlist button'
+// Spotify creates new playlist with 50 songs from year
 
 // GET user's name
 // THEN GET 50 songs from year
