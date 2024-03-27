@@ -54,7 +54,11 @@ app.get("/login", (req, res) => {
 
 app.get("/callback", async (req, res) => {
   const { code, state } = req.query;
+  console.log(state);
+  console.log(req.session.state);
   if (state !== req.session.state) {
+    console.log(state);
+    console.log(req.session.state);
     return res.status(500).send("State mismatch");
   }
   try {
@@ -92,34 +96,52 @@ app.get("/callback", async (req, res) => {
   }
 });
 
-app.get("/getSongFromYear", async (req, res) => {
-  const accessToken = req.cookies.access_token; // Get access token from cookies
-
-  // Make request to Spotify API to get 5 songs from year 2000 (test)
-  const response = await fetch(
-    "https://api.spotify.com/v1/search?q=year%3A2000&type=track&market=US&limit=5&offset=0",
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    }
-  );
-
-  const data = await response.json();
-  res.send(data); // Send data back to client
+app.get("/getGenres", async (req, res) => {
+  const accessToken = req.cookies.access_token;
+  if (!accessToken) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: No access token provided" });
+  }
+  try {
+    const genresResponse = await fetch(
+      "https://api.spotify.com/v1/recommendations/available-genre-seeds",
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    );
+    const data = await genresResponse.json();
+    res.send(data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch genres",
+      error: error.message,
+    });
+  }
 });
+
+// app.get("/getSongFromYear/:year", async (req, res) => {
+//   const year = req.params.year;
+//   const accessToken = req.cookies.access_token; // Get access token from cookies
+
+//   // Make request to Spotify API to get 5 songs from year 2000 (test)
+//   const response = await fetch(
+//     `https://api.spotify.com/v1/search?q=year:${year}&type=track&market=US&limit=5&offset=0`,
+//     {
+//       method: "GET",
+//       headers: {
+//         Authorization: "Bearer " + accessToken,
+//       },
+//     }
+//   );
+
+//   const data = await response.json();
+//   res.send(data); // Send data back to client
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-// Home page that say's login into Spotify
-// User goes through authentication
-// User types in year and hits 'create playlist button'
-// Spotify creates new playlist with 50 songs from year
-
-// GET user's name
-// THEN GET 50 songs from year
-// THEN POST a new playlist (create new playlist) (ex. User's 2002 Playlist)
-// THEN POST each 50 songs to new playlist

@@ -3,9 +3,8 @@
 }
 
 body {
-  background-color: #121212;
+  background-color: black;
   height: 100vh;
-  color: white;
 }
 
 @font-face {
@@ -27,13 +26,11 @@ header {
   flex-wrap: wrap;
 }
 
-.title,
-.description,
-label {
+.description {
   color: white;
 }
 
-.title {
+.header {
   font-family: "Circular Sp Ara Black Web", sans-serif;
   color: #1db954;
 }
@@ -66,35 +63,9 @@ label {
   font-family: "Circular Sp Ara Book Web", sans-serif;
 }
 
-#year-input {
-  background-color: #242424;
-  border: 0;
-  border-radius: 500px;
-  color: white;
-  height: 48px;
-  padding: 6px 36px;
-  width: 160px;
-  text-align: center;
-  text-overflow: ellipsis;
-  font-family: "Circular Sp Ara Book Web", sans-serif;
-}
-
-input[type="number"] {
-  font-size: 24px;
-}
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
 #submit-btn,
-#login-btn {
+#login-btn,
+#show-more-btn {
   background: white;
   color: black;
   font-family: "Circular Sp Ara Book Web", sans-serif;
@@ -105,4 +76,32 @@ input[type="number"] {
   cursor: pointer;
   padding: 16px 40px;
   font-size: 1.125rem;
+}
+
+.show-more {
+  display: none;
+  justify-content: center;
+  padding: 10px 5px;
+}
+
+#genre-section {
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 3em;
+  display: none;
+  margin-top: 3em;
+}
+
+#genre-btn {
+  color: white;
+  font-family: "Circular Sp Ara Book Web", sans-serif;
+  font-weight: 700;
+  border: 0px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.125rem;
+  height: 140px;
+  width: 145px;
 }
