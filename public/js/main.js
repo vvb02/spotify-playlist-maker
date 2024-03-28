@@ -4,8 +4,10 @@ const homePage = document.querySelector("#input-section");
 let userIsAuthenticated = false;
 const genreGenerate = document.querySelector("#submit-btn");
 const genreSection = document.querySelector("#genre-section");
-const showMoreSection = document.querySelector(".show-more");
+const showMoreSection = document.querySelector("#show-more");
 const showMoreBtn = document.querySelector("#show-more-btn");
+let selectedGenres = [];
+
 const colorPalette = [
   "#A83326",
   "#CA4334",
@@ -62,26 +64,53 @@ const getGenres = () => {
     .catch((error) => console.error("Error fetching genres: ", error));
 };
 
-//display Genres
-
 let clickCounter = 0;
+let selectedCounter = 0;
 const numofGenres = 21;
+
 function displayTwentyGenres(array) {
   const startGenre = clickCounter * numofGenres;
   const lastGenre = startGenre + numofGenres;
   const nextGenres = array.slice(startGenre, lastGenre);
-  console.log(clickCounter);
 
   nextGenres.forEach((genre) => {
+    // create and append button
     const genreBtn = document.createElement("button");
-    genreBtn.setAttribute("id", "genre-btn");
+    genreBtn.setAttribute("class", "genre-btn");
+    genreBtn.setAttribute("genre", `${genre}`);
     let btnColor = colorPalette[Math.floor(Math.random() * 17)];
     genreBtn.style.background = `${btnColor}`;
     genreBtn.innerText = `${genre}`;
     genreSection.appendChild(genreBtn);
+
+    // add/remove genres from selected genres
+    genreBtn.addEventListener("click", () => {
+      if (genreBtn.classList.contains("selected-genre")) {
+        genreBtn.classList.remove("selected-genre");
+        selectedGenres = selectedGenres.filter(
+          (e) => e !== `${genreBtn.getAttribute("genre")}`
+        ); //filter through array and remove it
+        selectedCounter--;
+        console.log("im deselected!");
+        console.log(selectedGenres);
+      } else if (
+        selectedCounter < 5 &&
+        !genreBtn.classList.contains("selected-genre")
+      ) {
+        selectedCounter++;
+        genreBtn.classList.add("selected-genre");
+        selectedGenres.push(genreBtn.getAttribute("genre"));
+        console.log("im selected!");
+        console.log(selectedGenres);
+      } else if (
+        selectedCounter == 5 &&
+        !genreBtn.classList.contains("selected-genre")
+      ) {
+        console.log("im disabled!");
+      }
+    });
   });
   clickCounter++;
-
   if (clickCounter == 6) {
     showMoreBtn.style.display = "none";
   }
@@ -91,6 +120,7 @@ function displayTwentyGenres(array) {
 showMoreBtn.addEventListener("click", function () {
   displayTwentyGenres(genresArray);
 });
+
 //user login
 loginBtn.addEventListener("click", () => {
   location.assign("http://localhost:3000/login");

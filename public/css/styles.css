@@ -78,10 +78,14 @@ label {
   font-size: 1.125rem;
 }
 
-.show-more {
+#show-more {
   display: none;
   justify-content: center;
   padding: 10px 5px;
+}
+
+#selected-genre {
+  border: 6px solid white;
 }
 
 #genre-section {
@@ -94,7 +98,7 @@ label {
   margin-top: 3em;
 }
 
-#genre-btn {
+.genre-btn {
   color: white;
   font-family: "Circular Sp Ara Book Web", sans-serif;
   font-weight: 700;
@@ -104,4 +108,8 @@ label {
   font-size: 1.125rem;
   height: 140px;
   width: 145px;
+}
+
+.selected-genre {
+  border: 6px solid white;
 }
