@@ -54,19 +54,22 @@ app.get("/login", (req, res) => {
   // Redirect the user to Spotify's authorization page
   let state = generateRandomString(16);
   req.session.state = state;
-  console.log(state);
+  const encodedState = encodeURIComponent(state);
+
   res.redirect(
-    `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}&state=${state}`
+    `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
+      REDIRECT_URI
+    )}&scope=${encodeURIComponent(SCOPES)}&state=${encodedState}`
   );
 });
 
 app.get("/callback", async (req, res) => {
   const { code, state } = req.query;
-  console.log(state);
-  console.log(req.session.state);
+  console.log("state" + state);
+  console.log("req.session.state" + req.session.state);
   if (state !== req.session.state) {
-    console.log(state);
-    console.log(req.session.state);
+    console.log("state" + state);
+    console.log("req.session.state" + req.session.state);
     return res.status(500).send("State mismatch");
   }
   try {
@@ -204,6 +207,8 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
 
+    // NEXT: Display playlist image, track images, and link to playlist on UI
+    // Fix state mismatch error <.>
     res.send(addTrackstoPlaylist);
   } catch (error) {
     res.status(500).json({

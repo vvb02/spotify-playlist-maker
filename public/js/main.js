@@ -1,8 +1,6 @@
 const loginBtn = document.querySelector("#login-btn");
 const loginPage = document.querySelector("#login-section");
-const homePage = document.querySelector("#input-section");
 let userIsAuthenticated = false;
-const genreGenerate = document.querySelector("#submit-btn");
 const genreSection = document.querySelector("#genre-section");
 const controlsSection = document.querySelector("#controls-section");
 const showMoreBtn = document.querySelector("#show-more-btn");
@@ -47,6 +45,7 @@ const checkAuthStatus = () => {
         console.log("User is NOT logged in");
         updateUI(false);
       }
+      getGenres();
     })
     .catch((error) => console.error("Error checking auth status:", error));
 };
@@ -59,7 +58,6 @@ const getGenres = () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      genreSection.style.display = "flex";
       controlsSection.style.display = "flex";
       genresArray = data.genres;
       displayTwentyGenres(genresArray);
@@ -154,12 +152,10 @@ const updateUI = (isAuthenticated) => {
   if (isAuthenticated) {
     // Show authenticated user interface
     loginPage.style.display = "none";
-    homePage.style.display = "flex";
+    genreSection.style.display = "flex";
   } else {
     // Show login button
     loginPage.style.display = "flex";
-    homePage.style.display = "none";
+    genreSection.style.display = "none";
   }
 };
-
-genreGenerate.addEventListener("click", getGenres);
