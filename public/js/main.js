@@ -4,9 +4,11 @@ const homePage = document.querySelector("#input-section");
 let userIsAuthenticated = false;
 const genreGenerate = document.querySelector("#submit-btn");
 const genreSection = document.querySelector("#genre-section");
-const showMoreSection = document.querySelector("#show-more");
+const controlsSection = document.querySelector("#controls-section");
 const showMoreBtn = document.querySelector("#show-more-btn");
+const generateBtn = document.querySelector("#generate-btn");
 let selectedGenres = [];
+let userId;
 
 const colorPalette = [
   "#A83326",
@@ -38,7 +40,8 @@ const checkAuthStatus = () => {
     .then((data) => {
       if (data.isAuthenticated) {
         userIsAuthenticated = true;
-        console.log("User is logged in");
+        userId = data.userId; // Assign the userId from the server response to the variable
+        console.log("User is logged in with ID:", userId);
         updateUI(true);
       } else {
         console.log("User is NOT logged in");
@@ -57,7 +60,7 @@ const getGenres = () => {
     .then((response) => response.json())
     .then((data) => {
       genreSection.style.display = "flex";
-      showMoreSection.style.display = "flex";
+      controlsSection.style.display = "flex";
       genresArray = data.genres;
       displayTwentyGenres(genresArray);
     })
@@ -91,8 +94,6 @@ function displayTwentyGenres(array) {
           (e) => e !== `${genreBtn.getAttribute("genre")}`
         ); //filter through array and remove it
         selectedCounter--;
-        console.log("im deselected!");
-        console.log(selectedGenres);
       } else if (
         selectedCounter < 5 &&
         !genreBtn.classList.contains("selected-genre")
@@ -100,8 +101,6 @@ function displayTwentyGenres(array) {
         selectedCounter++;
         genreBtn.classList.add("selected-genre");
         selectedGenres.push(genreBtn.getAttribute("genre"));
-        console.log("im selected!");
-        console.log(selectedGenres);
       } else if (
         selectedCounter == 5 &&
         !genreBtn.classList.contains("selected-genre")
@@ -116,9 +115,31 @@ function displayTwentyGenres(array) {
   }
 }
 
+function createPlaylist(selectedGenres, userId) {
+  fetch("http://localhost:3000/getRecommendations", {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({ genres: selectedGenres, userId: userId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => console.error("Error fetching tracks: ", error));
+}
+
 // show more genres
 showMoreBtn.addEventListener("click", function () {
   displayTwentyGenres(genresArray);
+});
+
+// generate playlist
+generateBtn.addEventListener("click", function () {
+  if (selectedGenres.length < 1) {
+    console.log("please select atleast one genre!");
+  } else {
+    createPlaylist(selectedGenres, userId);
+  }
 });
 
 //user login

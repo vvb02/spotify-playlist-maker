@@ -5,10 +5,18 @@ const cookieParser = require("cookie-parser");
 const app = express();
 app.use(cookieParser());
 app.use(express.static("public"));
+app.use(express.json());
 const fetch = require("node-fetch"); // include node-fetch to make HTTP requests
 
 const PORT = 3000;
 const AUTHORIZE_URI = "https://accounts.spotify.com/authorize";
+const SCOPES = [
+  "playlist-read-private",
+  "playlist-read-collaborative",
+  "playlist-modify-public",
+  "playlist-modify-private",
+].join(" ");
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = "http://localhost:3000/callback";
@@ -35,8 +43,8 @@ app.use(
 );
 
 app.get("/auth/status", (req, res) => {
-  if (req.cookies.access_token) {
-    res.json({ isAuthenticated: true });
+  if (req.cookies.access_token && req.session.userId) {
+    res.json({ isAuthenticated: true, userId: req.session.userId });
   } else {
     res.json({ isAuthenticated: false });
   }
@@ -48,7 +56,7 @@ app.get("/login", (req, res) => {
   req.session.state = state;
   console.log(state);
   res.redirect(
-    `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&state=${state}`
+    `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}&state=${state}`
   );
 });
 
@@ -85,6 +93,17 @@ app.get("/callback", async (req, res) => {
       // Store access token and refresh token in cookies
       res.cookie("access_token", data.access_token, { httpOnly: true });
       res.cookie("refresh_token", data.refresh_token, { httpOnly: true });
+      // Fetch user Spotify ID
+      const userDataResponse = await fetch("https://api.spotify.com/v1/me", {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+
+      const userData = await userDataResponse.json();
+
+      // Store user spotify ID in the session
+      req.session.userId = userData.id;
 
       // Redirect to another route to perform more actions (test)
       res.redirect(`http://localhost:3000/index.html`);
@@ -110,6 +129,7 @@ app.get("/getGenres", async (req, res) => {
         method: "GET",
         headers: {
           Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
         },
       }
     );
@@ -123,24 +143,59 @@ app.get("/getGenres", async (req, res) => {
   }
 });
 
-// app.get("/getSongFromYear/:year", async (req, res) => {
-//   const year = req.params.year;
-//   const accessToken = req.cookies.access_token; // Get access token from cookies
+app.post("/getRecommendations", async (req, res) => {
+  const genres = req.body.genres.join(",");
+  const userId = req.body.userId;
 
-//   // Make request to Spotify API to get 5 songs from year 2000 (test)
-//   const response = await fetch(
-//     `https://api.spotify.com/v1/search?q=year:${year}&type=track&market=US&limit=5&offset=0`,
-//     {
-//       method: "GET",
-//       headers: {
-//         Authorization: "Bearer " + accessToken,
-//       },
-//     }
-//   );
+  const accessToken = req.cookies.access_token;
+  if (!accessToken) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: No access token provided" });
+  }
+  try {
+    //Get tracks from genre(s)
+    const recommendations = await fetch(
+      `https://api.spotify.com/v1/recommendations?limit=5&market=US&seed_genres=${encodeURIComponent(
+        genres
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const recommendationsData = await recommendations.json();
+    // res.send(recommendationsData);
 
-//   const data = await response.json();
-//   res.send(data); // Send data back to client
-// });
+    //Create a new (empty) playlist
+    const createPlaylist = await fetch(
+      `https://api.spotify.com/v1/users/${userId}/playlists`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "New Playlist",
+          description: "New playlist description",
+          public: false,
+        }),
+      }
+    );
+    const playlistData = await createPlaylist.json();
+    res.send(playlistData);
+    // AFTER: add tracks to playlist
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create playlist",
+      error: error.message,
+    });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

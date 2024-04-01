@@ -5,6 +5,7 @@
 body {
   background-color: black;
   height: 100vh;
+  font-family: "Circular Sp Ara Book Web", sans-serif;
 }
 
 @font-face {
@@ -31,12 +32,10 @@ header {
 }
 
 .header {
-  font-family: "Circular Sp Ara Black Web", sans-serif;
   color: #1db954;
 }
 
 .description {
-  font-family: "Circular Sp Ara Book Web", sans-serif;
   font-size: 30px;
 }
 
@@ -60,7 +59,6 @@ main {
 label {
   font-weight: 600;
   font-size: 1.8em;
-  font-family: "Circular Sp Ara Book Web", sans-serif;
 }
 
 #submit-btn,
@@ -68,7 +66,6 @@ label {
 #show-more-btn {
   background: white;
   color: black;
-  font-family: "Circular Sp Ara Book Web", sans-serif;
   padding: 6px 36px;
   font-weight: 700;
   border: 0;
@@ -78,12 +75,22 @@ label {
   font-size: 1.125rem;
 }
 
-#show-more {
+#controls-section {
   display: none;
   justify-content: center;
   padding: 10px 5px;
 }
-
+#generate-btn {
+  justify-content: center;
+  padding: 10px 5px;
+  background: #1db954;
+  color: white;
+  font-size: 1.125rem;
+  padding: 6px 36px;
+  font-weight: 700;
+  border: 0;
+  border-radius: 30px;
+}
 #selected-genre {
   border: 6px solid white;
 }
