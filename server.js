@@ -168,7 +168,6 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
     const recommendationsData = await recommendations.json();
-    // res.send(recommendationsData);
 
     //Create a new (empty) playlist
     const createPlaylist = await fetch(
@@ -187,11 +186,28 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
     const playlistData = await createPlaylist.json();
-    res.send(playlistData);
-    // AFTER: add tracks to playlist
+
+    const playlistId = playlistData.id;
+
+    const trackUris = recommendationsData.tracks.map((track) => track.uri); // Create new array for track uri's
+
+    // Add tracks to playlist
+    const addTrackstoPlaylist = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uris: trackUris }),
+      }
+    );
+
+    res.send(addTrackstoPlaylist);
   } catch (error) {
     res.status(500).json({
-      message: "Failed to create playlist",
+      message: "Failed to add tracks to playlist",
       error: error.message,
     });
   }
