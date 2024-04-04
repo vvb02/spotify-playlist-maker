@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nostalgia Radio</title>
+    <title>Spotify Playlist Maker</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <header>
-      <h1 class="header">Spotify Playlist Generator</h1>
+      <h1 class="header">Spotify Playlist Maker</h1>
       <p class="description">Create a playlist tailored to your taste</p>
     </header>
     <main>
@@ -19,6 +19,17 @@
       <section id="controls-section">
         <button id="show-more-btn">Show More</button>
         <button id="generate-btn">Create Playlist</button>
+      </section>
+      <section id="playlist-items">
+        <div class="playlist-details">
+          <img class="playlist-cover" src="" alt="" />
+          <div class="playlist-meta">
+            <p class="playlist-type">Public Playlist</p>
+            <h2 class="playlist-name">New Playlist</h2>
+            <p class="playlist-description">New playlist description</p>
+          </div>
+        </div>
+        <div class="playlist-tracks"></div>
       </section>
     </main>
     <script src="js/main.js"></script>

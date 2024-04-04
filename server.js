@@ -15,6 +15,7 @@ const SCOPES = [
   "playlist-read-collaborative",
   "playlist-modify-public",
   "playlist-modify-private",
+  "ugc-image-upload",
 ].join(" ");
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -189,9 +190,7 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
     const playlistData = await createPlaylist.json();
-
     const playlistId = playlistData.id;
-
     const trackUris = recommendationsData.tracks.map((track) => track.uri); // Create new array for track uri's
 
     // Add tracks to playlist
@@ -208,8 +207,53 @@ app.post("/getRecommendations", async (req, res) => {
     );
 
     // NEXT: Display playlist image, track images, and link to playlist on UI
-    // Fix state mismatch error <.>
-    res.send(addTrackstoPlaylist);
+
+    // get playlist image
+    // get playlist items
+    const getPlaylistCover = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/images`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!getPlaylistCover.ok) {
+      console.log(playlistData);
+      throw new Error("Failed to fetch playlist image");
+    }
+    const playlistCover = await getPlaylistCover.json();
+
+    const getTrackDetails = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let trackDetails = await getTrackDetails.json();
+
+    trackImages = trackDetails.items.map((track) => {
+      return track.track.album.images[1].url;
+    });
+    trackNames = trackDetails.items.map((track) => {
+      return track.track.name;
+    });
+
+    const responseData = {
+      trackImages: trackImages,
+      trackNames: trackNames,
+      playlistCover: playlistCover[1].url,
+    };
+
+    res.send(responseData);
+    console.log(responseData);
   } catch (error) {
     res.status(500).json({
       message: "Failed to add tracks to playlist",

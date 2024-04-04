@@ -5,6 +5,15 @@ const genreSection = document.querySelector("#genre-section");
 const controlsSection = document.querySelector("#controls-section");
 const showMoreBtn = document.querySelector("#show-more-btn");
 const generateBtn = document.querySelector("#generate-btn");
+const playlistSection = document.querySelector("#playlist-items");
+const descriptionEl = document.querySelector(".description");
+const playlistCoverEl = document.querySelector(".playlist-cover");
+const playlistDetailsEl = document.querySelector(".playlist-details");
+const playlistTypeEl = document.querySelector(".playlist-type");
+const playlistNameEl = document.querySelector(".playlist-name");
+const playlistDescriptionEl = document.querySelector(".playlist-description");
+const tracksContainer = document.querySelector(".playlist-tracks");
+
 let selectedGenres = [];
 let userId;
 
@@ -122,8 +131,40 @@ function createPlaylist(selectedGenres, userId) {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
+      displayPlaylistInfo(
+        data.playlistCover,
+        data.trackImages,
+        data.trackNames
+      );
     })
     .catch((error) => console.error("Error fetching tracks: ", error));
+}
+
+function displayPlaylistInfo(playlistCover, trackImages, trackNames) {
+  playlistSection.style.display = "block";
+  genreSection.style.display = "none";
+  controlsSection.style.display = "none";
+  tracksContainer.style.display = "grid";
+  playlistDetailsEl.style.display = "flex";
+  descriptionEl.textContent = "Your personalized playlist is ready! ";
+
+  playlistCoverEl.src = playlistCover;
+
+  trackImages.forEach((image, index) => {
+    const trackDiv = document.createElement("div");
+    trackDiv.setAttribute("class", "track-info");
+
+    const trackImageEl = document.createElement("img");
+    trackImageEl.setAttribute("class", "track-image");
+    trackImageEl.src = image;
+    trackDiv.appendChild(trackImageEl);
+
+    const trackNameEl = document.createElement("p");
+    trackNameEl.setAttribute("class", "track-name");
+    trackNameEl.textContent = trackNames[index];
+    trackDiv.appendChild(trackNameEl);
+    tracksContainer.appendChild(trackDiv);
+  });
 }
 
 // show more genres

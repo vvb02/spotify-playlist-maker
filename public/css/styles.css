@@ -9,7 +9,7 @@ body {
 }
 
 @font-face {
-  font-family: "Circular Sp Ara Black Web";
+  font-family: "Circular Sp Ara Black Web Black";
   src: url("../fonts/Lineto_FontPool_Delivery_231024110327/Lineto_FontPool_Delivery_231024110327/Circular Spotify Text Arabic - Web Fonts/css/fonts/Circular Sp Ara Web Black.woff")
     format("woff");
 }
@@ -115,4 +115,62 @@ label {
 
 .selected-genre {
   border: 6px solid white;
+}
+
+.playlist-items {
+  padding: 10px 15px;
+}
+
+.playlist-details {
+  display: none;
+  color: white;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 5em;
+  gap: 50px;
+  padding: 10px 50px;
+}
+
+.playlist-cover {
+  width: 250px;
+  height: 250px;
+}
+
+.playlist-type,
+.playlist-description {
+  margin: 0;
+  color: #d9d9d9;
+}
+
+.playlist-name {
+  font-size: 80px;
+  margin: 0;
+  font-family: "Circular Sp Ara Black Web Black";
+}
+
+.playlist-tracks {
+  display: none;
+  justify-items: center;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 10px;
+  row-gap: 100px;
+}
+
+@media (max-width: 980px) {
+  .playlist-tracks {
+    grid-template-columns: 1fr;
+  }
+}
+.track-image {
+  width: 200px;
+  height: 200px;
+}
+
+.track-name {
+  font-size: 15px;
+  text-align: center;
+  color: black;
+  max-width: 200px;
+  width: 100%;
 }
