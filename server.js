@@ -160,7 +160,7 @@ app.post("/getRecommendations", async (req, res) => {
   try {
     //Get tracks from genre(s)
     const recommendations = await fetch(
-      `https://api.spotify.com/v1/recommendations?limit=5&market=US&seed_genres=${encodeURIComponent(
+      `https://api.spotify.com/v1/recommendations?limit=30&market=US&seed_genres=${encodeURIComponent(
         genres
       )}`,
       {
@@ -206,10 +206,7 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
 
-    // NEXT: Display playlist image, track images, and link to playlist on UI
-
-    // get playlist image
-    // get playlist items
+    // Get playlist cover
     const getPlaylistCover = await fetch(
       `https://api.spotify.com/v1/playlists/${playlistId}/images`,
       {
@@ -226,6 +223,7 @@ app.post("/getRecommendations", async (req, res) => {
     }
     const playlistCover = await getPlaylistCover.json();
 
+    // Get track images and names
     const getTrackDetails = await fetch(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
@@ -246,9 +244,14 @@ app.post("/getRecommendations", async (req, res) => {
       return track.track.name;
     });
 
+    trackPreviews = trackDetails.items.map((track) => {
+      return track.track.preview_url;
+    });
+
     const responseData = {
       trackImages: trackImages,
       trackNames: trackNames,
+      trackPreviewUrl: trackPreviews,
       playlistCover: playlistCover[1].url,
     };
 

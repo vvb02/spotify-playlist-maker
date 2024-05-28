@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: white;
   height: 100vh;
   font-family: "Circular Sp Ara Book Web", sans-serif;
 }
@@ -28,7 +28,7 @@ header {
 }
 
 .description {
-  color: white;
+  color: black;
 }
 
 .header {
@@ -52,15 +52,10 @@ main {
   flex-wrap: wrap;
 }
 
-label {
-  font-weight: 600;
-  font-size: 1.8em;
-}
-
 #login-btn,
 #show-more-btn {
-  background: white;
-  color: black;
+  background: black;
+  color: white;
   padding: 6px 36px;
   font-weight: 700;
   border: 0;
@@ -79,7 +74,7 @@ label {
   justify-content: center;
   padding: 10px 5px;
   background: #1db954;
-  color: white;
+  color: black;
   font-size: 1.125rem;
   padding: 6px 36px;
   cursor: pointer;
@@ -88,7 +83,7 @@ label {
   border-radius: 30px;
 }
 #selected-genre {
-  border: 6px solid white;
+  border: 6px solid black;
 }
 
 #genre-section {
@@ -110,11 +105,13 @@ label {
   cursor: pointer;
   font-size: 1.125rem;
   height: 140px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
   width: 145px;
 }
 
 .selected-genre {
-  border: 6px solid white;
+  border: 6px solid black;
 }
 
 .playlist-items {
@@ -123,7 +120,7 @@ label {
 
 .playlist-details {
   display: none;
-  color: white;
+  color: black;
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -135,36 +132,53 @@ label {
 .playlist-cover {
   width: 250px;
   height: 250px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .playlist-type,
 .playlist-description {
   margin: 0;
-  color: #d9d9d9;
+  color: #424242;
+  cursor: pointer;
 }
 
 .playlist-name {
   font-size: 80px;
   margin: 0;
   font-family: "Circular Sp Ara Black Web Black";
+  cursor: pointer;
 }
 
 .playlist-tracks {
   display: none;
   justify-items: center;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 10px;
-  row-gap: 100px;
+  row-gap: 60px;
+  padding: 5px 65px;
 }
 
 @media (max-width: 980px) {
   .playlist-tracks {
     grid-template-columns: 1fr;
+    padding: 0;
   }
 }
+
+.track-container {
+  position: relative;
+}
+.track-container:hover .track-image {
+  transform: scale(1.05);
+}
+
 .track-image {
   width: 200px;
   height: 200px;
+  cursor: pointer;
+  object-fit: cover;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .track-name {
@@ -173,4 +187,160 @@ label {
   color: black;
   max-width: 200px;
   width: 100%;
+}
+.playing {
+  border: 4px solid black;
+}
+
+.play-pause-btn {
+  position: absolute;
+  top: 41%;
+  left: 50%;
+  transform: translate(-55%, -50%);
+  width: 116px;
+  height: 98px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: fill 0.3s ease;
+}
+.play-pause-btn:hover,
+.play-pause-btn:hover {
+  fill: white;
+  background: none;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.modal-header h4 {
+  color: black;
+  font-size: 1.6em;
+  margin-bottom: 15px;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  color: black;
+  font-size: 2.5rem;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.playlist-form {
+  width: 65%;
+}
+
+.form-group:first-of-type {
+  margin-bottom: 1em;
+}
+
+.playlist-thumbnail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.file-upload-label {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: black;
+  cursor: pointer;
+  text-align: center;
+  font-family: "Circular Sp Ara Black Web Black";
+}
+
+.playlist-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: black;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.playlist-form input[type="text"],
+.playlist-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+  /* background: #555; */
+  color: black;
+}
+
+.playlist-form textarea {
+  height: 80px;
+  resize: none;
+  color: black;
+}
+
+.thumbnail {
+  width: 150px;
+}
+
+.save-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  font-size: 15px;
+  border-radius: 4px;
+  background: #1db954;
+  color: black;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.modal-background {
+  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  opacity: 0;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0.7;
+  transform: scale(1.5);
+}
+
+.edit-details-modal {
+  background: #333;
+  border-radius: 8px;
+  color: white;
+  padding: 0px 20px;
+  width: 400px;
+  margin: auto;
+  background: white;
+  max-height: 385px;
+  max-width: 530px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.5s;
+  visibility: hidden;
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.active {
+  visibility: visible;
 }
