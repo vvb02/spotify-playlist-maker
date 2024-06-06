@@ -242,13 +242,17 @@ app.post("/getRecommendations", async (req, res) => {
     );
 
     let trackDetails = await getTrackDetails.json();
-    console.log(trackDetails.track);
+    console.log("track details" + trackDetails.items);
 
     trackImages = trackDetails.items.map((track) => {
       return track.track.album.images[1].url;
     });
     trackNames = trackDetails.items.map((track) => {
       return track.track.name;
+    });
+
+    trackArtists = trackDetails.items.map((track) => {
+      return track.track.artists[0].name;
     });
 
     trackPreviews = trackDetails.items.map((track) => {
@@ -260,6 +264,7 @@ app.post("/getRecommendations", async (req, res) => {
       trackNames: trackNames,
       trackPreviewUrl: trackPreviews,
       playlistCover: playlistCover[1].url,
+      trackArtists: trackArtists,
     };
 
     res.send({ responseData, playlistId });

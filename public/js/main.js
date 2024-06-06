@@ -159,10 +159,12 @@ function createPlaylist(selectedGenres, userId) {
         data.responseData.playlistCover,
         data.responseData.trackImages,
         data.responseData.trackNames,
-        data.responseData.trackPreviewUrl
+        data.responseData.trackPreviewUrl,
+        data.responseData.trackArtists
       );
       playlistId = data.playlistId;
       console.log(playlistId);
+      console.log(data.responseData.trackDetails);
     })
     .catch((error) => console.error("Error fetching tracks: ", error));
 }
@@ -175,7 +177,8 @@ function displayPlaylistInfo(
   playlistCover,
   trackImages,
   trackNames,
-  trackPreview
+  trackPreview,
+  trackArtist
 ) {
   playlistSection.style.display = "block";
   genreSection.style.display = "none";
@@ -205,6 +208,12 @@ function displayPlaylistInfo(
     trackNameEl.setAttribute("class", "track-name");
     trackNameEl.textContent = trackNames[index];
     trackDiv.appendChild(trackNameEl);
+
+    // Place track artist in container
+    const trackArtistEl = document.createElement("p");
+    trackArtistEl.setAttribute("class", "track-artist");
+    trackArtistEl.textContent = trackArtist[index];
+    trackDiv.appendChild(trackArtistEl);
 
     // Place track container onto page
     tracksContainer.appendChild(trackDiv);
