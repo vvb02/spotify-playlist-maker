@@ -24,6 +24,7 @@ const playBtnUrl = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://
 const pauseBtnUrl = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="eMaJjO7QrCx1" viewBox="0 0 71 78" shape-rendering="geometricPrecision" text-rendering="geometricPrecision"><g transform="translate(-111.456848-98.884613)"><ellipse rx="22.5" ry="22.5" transform="translate(146.956842 137.884615)" fill="#1db954" stroke-width="0"/><rect width="4" height="21.205298" rx="1" ry="1" transform="translate(138.956842 127.281966)" stroke-width="0"/><rect width="4" height="21.205298" rx="1" ry="1" transform="translate(149.956842 127.281966)" stroke-width="0"/></g></svg>`;
 let selectedGenres = [];
 let userId;
+let playlistId;
 
 const colorPalette = [
   "#A83326",
@@ -153,18 +154,22 @@ function createPlaylist(selectedGenres, userId) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      console.log(data.responseData);
       displayPlaylistInfo(
-        data.playlistCover,
-        data.trackImages,
-        data.trackNames,
-        data.trackPreviewUrl
+        data.responseData.playlistCover,
+        data.responseData.trackImages,
+        data.responseData.trackNames,
+        data.responseData.trackPreviewUrl
       );
+      playlistId = data.playlistId;
+      console.log(playlistId);
     })
     .catch((error) => console.error("Error fetching tracks: ", error));
 }
 
 let currentPlaylistCover;
+let currentPlaylistName;
+let currentPlaylistDescription;
 
 function displayPlaylistInfo(
   playlistCover,
@@ -184,22 +189,27 @@ function displayPlaylistInfo(
   modalThumbnail.src = playlistCover;
 
   trackImages.forEach((image, index) => {
+    // Create track container
     const trackDiv = document.createElement("div");
     trackDiv.setAttribute("class", "track-container");
     trackDiv.setAttribute("data-index", index);
 
+    // Place track image in container
     const trackImageEl = document.createElement("img");
     trackImageEl.setAttribute("class", "track-image");
     trackImageEl.src = image;
     trackDiv.appendChild(trackImageEl);
 
+    // Place track name in container
     const trackNameEl = document.createElement("p");
     trackNameEl.setAttribute("class", "track-name");
     trackNameEl.textContent = trackNames[index];
     trackDiv.appendChild(trackNameEl);
+
+    // Place track container onto page
     tracksContainer.appendChild(trackDiv);
 
-    // Create the button and set the SVG
+    // Implement play/pause button
     const playPauseButton = document.createElement("button");
     playPauseButton.setAttribute("class", "play-pause-btn");
     playPauseButton.innerHTML = playBtnUrl;
@@ -255,7 +265,6 @@ function uploadImagePreview() {
     .querySelector("#file-upload")
     .addEventListener("change", function (event) {
       let file = event.target.files[0];
-      console.log(file);
       if (file) {
         let reader = new FileReader();
         reader.onload = function (e) {
@@ -275,9 +284,11 @@ function editPlaylistDetails() {
   let playlistDescription = document.querySelector(
     "#playlist-description-modal"
   ).value;
-
+  // check if neither are empty
   playlistNameEl.textContent = `${playlistName}`;
   playlistDescriptionEl.textContent = `${playlistDescription}`;
+  currentPlaylistName = playlistName;
+  currentPlaylistDescription = playlistDescription;
 }
 
 function editPlaylistCover() {
@@ -289,17 +300,42 @@ playlistDetailsEl.addEventListener("click", function () {
   uploadImagePreview();
 });
 
+function updatePlaylistDetails(
+  currentPlaylistCover,
+  currentPlaylistName,
+  currentPlaylistDescription
+) {
+  fetch("http://localhost:3000/updatePlaylistDetails", {
+    headers: { "Content-Type": "application/json" },
+    method: "PUT",
+    body: JSON.stringify({
+      cover: currentPlaylistCover,
+      name: currentPlaylistName,
+      description: currentPlaylistDescription,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) =>
+      console.error("Error updating playlist details: ", error)
+    );
+}
+
 closeBtn.addEventListener("click", closeModal);
 // modalBkg.addEventListener("click", closeModal);
 
 saveBtn.addEventListener("click", function (e) {
   e.preventDefault();
-  // const playlistName = document.querySelector("#playlistName").value;
-  // const playlistDescription = document.querySelector(
-  //   "#playlistDescription"
-  // ).value;
   editPlaylistCover();
   editPlaylistDetails();
+  updatePlaylistDetails(
+    currentPlaylistCover,
+    currentPlaylistName,
+    currentPlaylistDescription
+  );
+  closeModal();
 });
 
 // show more genres

@@ -7,6 +7,9 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use(express.json());
 const fetch = require("node-fetch"); // include node-fetch to make HTTP requests
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const sharp = require("sharp");
 
 const PORT = 3000;
 const AUTHORIZE_URI = "https://accounts.spotify.com/authorize";
@@ -190,7 +193,10 @@ app.post("/getRecommendations", async (req, res) => {
       }
     );
     const playlistData = await createPlaylist.json();
-    const playlistId = playlistData.id;
+    let playlistId = playlistData.id;
+    console.log(playlistId);
+    console.log(typeof playlistId);
+
     const trackUris = recommendationsData.tracks.map((track) => track.uri); // Create new array for track uri's
 
     // Add tracks to playlist
@@ -236,6 +242,7 @@ app.post("/getRecommendations", async (req, res) => {
     );
 
     let trackDetails = await getTrackDetails.json();
+    console.log(trackDetails.track);
 
     trackImages = trackDetails.items.map((track) => {
       return track.track.album.images[1].url;
@@ -255,7 +262,7 @@ app.post("/getRecommendations", async (req, res) => {
       playlistCover: playlistCover[1].url,
     };
 
-    res.send(responseData);
+    res.send({ responseData, playlistId });
     console.log(responseData);
   } catch (error) {
     res.status(500).json({
@@ -264,6 +271,95 @@ app.post("/getRecommendations", async (req, res) => {
     });
   }
 });
+
+async function convertImageToBase64(path) {
+  try {
+    const imageBuffer = await sharp(path).jpeg().toBuffer();
+    return imageBuffer.toString("base64");
+  } catch (error) {
+    console.error("Error converting image:", error);
+    throw error;
+  }
+}
+
+app.put(
+  "/updatePlaylistDetails",
+  upload.single("file-upload"),
+  async (req, res) => {
+    const playlistId = req.body.playlistId;
+    console.log("playlist id " + playlistId);
+    // const cover = req.body.cover;
+    const name = req.body.name;
+    const description = req.body.description;
+    console.log("name " + name);
+    console.log("description " + description);
+    const accessToken = req.cookies.access_token;
+    if (!accessToken) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: No access token provided" });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded." });
+    }
+    try {
+      // Update cover
+      const base64Image = await convertImageToBase64(req.file.path);
+      const updateCover = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "image/jpeg",
+          },
+          body: Buffer.from(base64Image, "base64"),
+        }
+      );
+      try {
+        if (response.status === 202) {
+          res.send("Playlist cover updated successfully");
+        } else {
+          const errorMessage = await updateCoverResponse.text();
+          res
+            .status(updateCoverResponse.status)
+            .send(`Failed to update playlist cover: ${errorMessage}`);
+        }
+      } finally {
+        // Remove uploaded file
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.error("Error removing file:", err);
+        });
+      }
+      // Update name and description
+      const detailsResponse = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            description: description,
+            public: false,
+          }),
+        }
+      );
+      if (!detailsResponse.ok) {
+        throw new Error(
+          `Failed to update playlist details: ${await detailsResponse.statusText}`
+        );
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Failed to update playlist details",
+        error: error.message,
+      });
+    }
+  }
+);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
