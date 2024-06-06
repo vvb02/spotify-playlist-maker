@@ -113,7 +113,9 @@ app.get("/callback", async (req, res) => {
       req.session.userId = userData.id;
 
       // Redirect to another route to perform more actions (test)
-      res.redirect(`http://localhost:3000/index.html`);
+      res.redirect(
+        `https://spotify-playlist-project-a2fc270dd074.herokuapp.com/index.html`
+      );
     } else {
       res.send("Error obtaining access token");
     }
