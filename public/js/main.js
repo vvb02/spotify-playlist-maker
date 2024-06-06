@@ -67,7 +67,9 @@ const updateUI = (isAuthenticated) => {
 };
 
 const checkAuthStatus = () => {
-  fetch("http://localhost:3000/auth/status")
+  fetch(
+    "https://spotify-playlist-project-a2fc270dd074.herokuapp.com/auth/status"
+  )
     .then((response) => response.json())
     .then((data) => {
       if (data.isAuthenticated) {
@@ -86,10 +88,13 @@ const checkAuthStatus = () => {
 
 let genresArray = [];
 const getGenres = () => {
-  fetch("http://localhost:3000/getGenres", {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-  })
+  fetch(
+    "https://spotify-playlist-project-a2fc270dd074.herokuapp.com/getGenres",
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "GET",
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       genresArray = data.genres;
@@ -148,11 +153,14 @@ function displayTwentyGenres(array) {
 }
 
 function createPlaylist(selectedGenres, userId) {
-  fetch("http://localhost:3000/getRecommendations", {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify({ genres: selectedGenres, userId: userId }),
-  })
+  fetch(
+    "https://spotify-playlist-project-a2fc270dd074.herokuapp.com/getRecommendations",
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ genres: selectedGenres, userId: userId }),
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       console.log(data.responseData);
@@ -315,15 +323,18 @@ function updatePlaylistDetails(
   currentPlaylistName,
   currentPlaylistDescription
 ) {
-  fetch("http://localhost:3000/updatePlaylistDetails", {
-    headers: { "Content-Type": "application/json" },
-    method: "PUT",
-    body: JSON.stringify({
-      cover: currentPlaylistCover,
-      name: currentPlaylistName,
-      description: currentPlaylistDescription,
-    }),
-  })
+  fetch(
+    "https://spotify-playlist-project-a2fc270dd074.herokuapp.com/updatePlaylistDetails",
+    {
+      headers: { "Content-Type": "application/json" },
+      method: "PUT",
+      body: JSON.stringify({
+        cover: currentPlaylistCover,
+        name: currentPlaylistName,
+        description: currentPlaylistDescription,
+      }),
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
@@ -364,7 +375,9 @@ generateBtn.addEventListener("click", function () {
 
 //user login
 loginBtn.addEventListener("click", () => {
-  location.assign("http://localhost:3000/login");
+  location.assign(
+    "https://spotify-playlist-project-a2fc270dd074.herokuapp.com/login"
+  );
   checkAuthStatus();
 });
 
