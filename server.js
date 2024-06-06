@@ -11,7 +11,6 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const sharp = require("sharp");
 
-const PORT = 3000;
 const AUTHORIZE_URI = "https://accounts.spotify.com/authorize";
 const SCOPES = [
   "playlist-read-private",
@@ -23,7 +22,8 @@ const SCOPES = [
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = "http://localhost:3000/callback";
+const REDIRECT_URI =
+  process.env.REDIRECT_URI || "http://localhost:3000/callback";
 const TOKEN_URI = "https://accounts.spotify.com/api/token";
 
 const generateRandomString = (length) => {
@@ -366,6 +366,7 @@ app.put(
   }
 );
 
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

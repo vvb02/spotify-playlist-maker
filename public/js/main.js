@@ -57,6 +57,7 @@ const updateUI = (isAuthenticated) => {
     // Show authenticated user interface
     loginPage.style.display = "none";
     genreSection.style.display = "flex";
+    controlsSection.style.display = "flex";
   } else {
     // Show login button
     loginPage.style.display = "flex";
@@ -74,11 +75,11 @@ const checkAuthStatus = () => {
         userId = data.userId; // Assign the userId from the server response to the variable
         console.log("User is logged in with ID:", userId);
         updateUI(true);
+        getGenres();
       } else {
         console.log("User is NOT logged in");
         updateUI(false);
       }
-      getGenres();
     })
     .catch((error) => console.error("Error checking auth status:", error));
 };
@@ -91,9 +92,9 @@ const getGenres = () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      controlsSection.style.display = "flex";
       genresArray = data.genres;
       displayTwentyGenres(genresArray);
+      controlsSection.style.display = "flex";
     })
     .catch((error) => console.error("Error fetching genres: ", error));
 };

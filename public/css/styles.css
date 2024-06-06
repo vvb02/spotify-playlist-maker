@@ -76,6 +76,7 @@ main {
   display: none;
   justify-content: center;
   padding: 10px 5px;
+  gap: 10px;
 }
 #generate-btn {
   justify-content: center;
